@@ -44,24 +44,35 @@ export default class App extends Component {
       }
       if (i == 1) {
 
-        const response = await fetch("http://www.suzies.cz/poledni-menu.html");
+        const response = await fetch("http://www.suzies.cz/poledni-menu");
         var xml = await response.text();
         var doc = new dom({ errorHandler: {} }).parseFromString(xml);
-        var path = "//*[@id='weekly-menu']";
+        var path = "//*[@id='food-grid']/div[2]/div";
 
         data.push({ restaurace: "Restaurace Suzie's Steakhouse", jidlo: "", cena: "" });
 
-        for (var y = 1; y < 10; y++) {
+        var pom;
+        if (den == 1) pom = 1;
+        if (den == 2) pom = 3;
+        if (den == 3) pom = 5;
+        if (den == 4) pom = 7;
+        if (den == 5) pom = 9;
+        data.push({
+          restaurace: "",
+          jidlo: ((xpath.select(`${path}/div[${pom}]/div[2]/div`, doc))[0].firstChild.data).replace(/\s+/g, ' ').trim(),
+          cena: ""
+        });
+        for (var y = 3; y < 5; y++) {
           data.push({
             restaurace: "",
-            jidlo: ((xpath.select(`${path}/div[${den}]/div[${y}]/div[1]`, doc))[0].firstChild.data).replace(/\s+/g, ' ').trim(),
-            cena: ((xpath.select(`${path}/div[${den}]/div[${y}]/div[2]`, doc))[0].firstChild.data).replace(/\s+/g, ' ').trim() + " Kč"
+            jidlo: ((xpath.select(`${path}/div[${pom}]/div[${y}]/div[1]`, doc))[0].firstChild.data).replace(/\s+/g, ' ').trim(),
+            cena: ""
           });
         }
+
+        this.setState({ viewState: true })
       }
     }
-
-    this.setState({ viewState: true })
 
   }
 
@@ -73,37 +84,35 @@ export default class App extends Component {
 
     return (
       <View style={styles.container}>
-        <View style={styles.container}>
-          <Text style={{ color: "white", fontSize: 35, left: "4%", top: "10%", fontWeight: 'bold' }}>Fuudie - denní menu</Text>
-          <Text style={{ color: "white", fontSize: 17, left: "4%", top: "10.25%", fontWeight: "700" }}>{days[d.getDay()]}, {d.getDate()}. {months[d.getMonth()]}</Text>
-          <View style={{ width: "100%", height: "80%", bottom: 0, borderRadius: 20, position: "absolute", backgroundColor: "white" }}>
-            {this.state.viewState ? <FlatList data={data} initialNumToRender={20}
-              renderItem={({ item, index }) => {
-                return (
-                  <View>
-                    {item.restaurace == "" ?
-                      <View style={{paddingVertical: 10}}>
-                        <Text style={[styles.jidlo1]}>{(index == 1 || index == 6) ? "Polévka: " : index == 7 ? "Pizza1: " : index == 8 ? "Pizza2: " : index == 9 ? "Pasta: " : index == 10 ? "Hotovka1: " : index == 11 ? "Hotovka2: " : index == 12 ? "Minutka: " : index == 13 ? "Tip dne: " : index == 14 ? "Dezert: " : ""}{item.jidlo}</Text>
-                        <Text style={[styles.jidlo1, {fontWeight: "400", paddingTop: (index == 1 || index == 6) ? 0 : 10, height: (index == 1 || index == 6) ? 0 : 28 }]}>{ (index == 1 || index == 6) ? "" : index == 7 ? "125 Kč" : index == 8 ? "135 Kč" : item.cena}</Text>
-                      </View>
-                      :
-                      <Text style={{ left: "5%", fontSize: 20, fontWeight: "700", paddingTop: 20 }}>{item.restaurace}</Text>}
-                  </View>
-                );
-              }}
-              style={{ width: "100%", height: "100%", paddingTop: 20, backgroundColor: "white", borderRadius: 20 }}
-              contentContainerStyle={{ paddingBottom: "50%" }}
-              keyExtractor={(item, index) => index.toString()} />
-              :
-              <SkeletonContent
-                containerStyle={{ width: "100%", height: "100%%", position: "absolute", backgroundColor: "#f2f2f2", borderRadius: 20 }}
-                isLoading={true}
-                layout={[
-                  { width: "90%", height: "90%", left: "5%", top: "5%", borderRadius: 20, position: "absolute" }
-                ]}
-              >
-              </SkeletonContent>}
-          </View>
+        <Text style={{ color: "white", fontSize: 35, left: "4%", top: "10%", fontWeight: 'bold', position: "absolute" }}>Fuudie - denní menu</Text>
+        <Text style={{ color: "white", fontSize: 17, left: "4%", top: "15%", fontWeight: "700", position: "absolute" }}>{days[d.getDay()]}, {d.getDate()}. {months[d.getMonth()]}</Text>
+        <View style={{ width: "100%", height: "80%", bottom: 0, borderRadius: 20, position: "absolute", backgroundColor: "white" }}>
+          {this.state.viewState ? <FlatList data={data} initialNumToRender={20}
+            renderItem={({ item, index }) => {
+              return (
+                <View>
+                  {item.restaurace == "" ?
+                    <View style={{ paddingVertical: 10 }}>
+                      <Text style={[styles.jidlo1]}>{(index == 1 || index == 6) ? "Polévka: " : index == 7 ? "Pizza1: " : index == 8 ? "Pizza2: " : ""}{item.jidlo}</Text>
+                      <Text style={[styles.jidlo1, { fontWeight: "400", paddingTop: (index == 1 || index == 6) ? 0 : 10, height: (index == 1 || index == 6) ? 0 : 28 }]}>{(index == 1 || index == 6) ? "" : index == 7 ? "118 Kč" : index == 8 ? "126 Kč" : item.cena}</Text>
+                    </View>
+                    :
+                    <Text style={{ left: "5%", fontSize: 20, fontWeight: "700", paddingTop: 20 }}>{item.restaurace}</Text>}
+                </View>
+              );
+            }}
+            style={{ width: "100%", height: "100%", paddingTop: 20, backgroundColor: "white", borderRadius: 20 }}
+            contentContainerStyle={{ paddingBottom: "50%" }}
+            keyExtractor={(item, index) => index.toString()} />
+            :
+            <SkeletonContent
+              containerStyle={{ width: "100%", height: "100%%", position: "absolute", backgroundColor: "#f2f2f2", borderRadius: 20 }}
+              isLoading={true}
+              layout={[
+                { width: "90%", height: "90%", left: "5%", top: "5%", borderRadius: 20, position: "absolute" }
+              ]}
+            >
+            </SkeletonContent>}
         </View>
       </View>
     );
@@ -112,7 +121,6 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#008000'
