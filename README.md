@@ -1,5 +1,7 @@
 # react-native-fuudie
 
+Aplikace nefunguje, jedna restaurace právě změnila celé svoje webové stranky??????????
+
 Aplikace Fuudie scrapuje kontent z webu, kdy nejříve danou stránku fetchne a následně podle xpath vytáhne naši informaci
 
 Ke spuštení projektu je zapotřebí nainstalovat tyhle balíčky:
