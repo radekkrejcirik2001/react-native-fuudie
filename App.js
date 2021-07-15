@@ -117,7 +117,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#008000'
   },
-});
   jidlo1: {
     left: "5%",
     paddingRight: "10%",
