@@ -86,7 +86,7 @@ export default class App extends Component {
       <View style={styles.container}>
         <Text style={{ color: "white", fontSize: 35, left: "4%", top: "10%", fontWeight: 'bold', position: "absolute" }}>Fuudie - denní menu</Text>
         <Text style={{ color: "white", fontSize: 17, left: "4%", top: "15%", fontWeight: "700", position: "absolute" }}>{days[d.getDay()]}, {d.getDate()}. {months[d.getMonth()]}</Text>
-        <View style={{ width: "100%", height: "80%", bottom: 0, borderRadius: 20, position: "absolute", backgroundColor: "white" }}>
+        <View style={{ width: "100%", height: "80%", bottom: 0, borderTopLeftRadius: 20, borderTopRightRadius: 20, position: "absolute", backgroundColor: "white" }}>
           {this.state.viewState ? <FlatList data={data} initialNumToRender={20}
             renderItem={({ item, index }) => {
               return (
